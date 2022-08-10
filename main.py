@@ -6,7 +6,7 @@ Created on Tue Dec  7 20:24:27 2021
 
 import random
 import math
-#from ps3_visualize import *
+from visualization import *
  
            
 class Position(object):
@@ -422,13 +422,13 @@ def HungerGames( num_weapons, danger_zones_amount, room_width, room_height, heal
                 print("Fix stats so they add up to 10 or less")
                
     print("Game starting, may the odds be ever in your favor!")
-    #anim = RobotVisualization(len(participantList), room_width, room_height, delay = .1)
+    anim = GameVisualization(len(participantList), room_width, room_height, delay = .1)
     while len(participantList)>1:
         positionDict={}
         matchUps=[]
         for participant in participantList:
             participant.update_position()
-            #anim.update(room, participantList)
+            anim.update(room, participantList)
             if participant.get_health()==0:
                 print(f'{participant.get_name()} has died')
                 participantList.remove(participant)
@@ -450,7 +450,7 @@ def HungerGames( num_weapons, danger_zones_amount, room_width, room_height, heal
             if p.get_health()==0:
                 print(f'{p.get_name()} has died')
                 participantList.remove(p)
-    #anim.done()  
+    anim.done()  
     print(f'{participantList[0].get_name()} has won the Hunger Games!')
     
         
