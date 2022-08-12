@@ -7,7 +7,7 @@ Created on Tue Dec  7 20:24:27 2021
 import random
 import math
 from visualization import *
- 
+
            
 class Position(object):
     """
@@ -109,7 +109,25 @@ class Room(object):
         else:
             return False 
 
-    
+    def get_dust_amount(self, i, j):
+        return self.position[(i, j)]
+
+    def is_tile_cleaned(self, w, h):
+        """
+        Return True if the tile (w, h) has been cleaned.
+
+        Assumes that (w, h) represents a valid tile inside the room.
+
+        w: an integer
+        h: an integer
+
+        Returns: True if the tile (w, h) is cleaned, False otherwise
+
+        Note: The tile is considered clean only when the amount of dust on this
+              tile is 0.
+        """
+        return self.position[(w,h)] == 0
+
     def is_position_in_room(self, pos):
         """
         Determines if pos is inside the room.
@@ -464,4 +482,62 @@ def FullGame():
     heal_zones=int(input("Type in number of healing areas(ex:1,5,10): "))
     HungerGames(num_weapons,danger_zones_amount,room_width,room_height,heal_zones)
     print("Thank you for playing!")
-FullGame()
+
+
+def HungerGames_web(num_weapons, danger_zones_amount, room_width, room_height, heal_zones, participants):
+    """
+    Version of hunger games to use when using the web app
+
+    participants - dict - dict of Participant instances
+    num_weapons - int - number of weapons
+    danger_zones_amount - int - number of danger zone amounts
+    room_width - int - width of room
+    room_height - int - height of room
+    heal_zones - int - amount of zones that heal a participant
+    """
+    #similar to run_simulation
+    
+    #Initializes a new room and robots
+    room = Room(room_width, room_height, danger_zones_amount, num_weapons, heal_zones)
+    # players=int(input("Type in the number of participants: "))
+    
+    participantList=[]
+    for participant in participants:
+        p = participants[participant]
+        participantList.append(Participant(room, participant, p['height'], p['speed'], p['strength'], p['intelligence'], p['creativity']))
+               
+    print("Game starting, may the odds be ever in your favor!")
+    anim = GameVisualization(len(participantList), room_width, room_height, delay = .1)
+    while len(participantList)>1:
+        positionDict={}
+        matchUps=[]
+        for participant in participantList:
+            participant.update_position()
+            anim.update(room, participantList)
+            if participant.get_health()==0:
+                print(f'{participant.get_name()} has died')
+                participantList.remove(participant)
+        for p in participantList:
+            x=math.floor(p.get_position().get_x())
+            y=math.floor(p.get_position().get_y())
+            positionDict[p]=(x,y)
+        for p in participantList:
+            position=positionDict[p]
+            fighters=[]
+            for key,value in positionDict.items():
+                if value==position:
+                    fighters.append(key)
+            if len(fighters)<=3 and len(fighters)>1 and fighters not in matchUps:
+                matchUps.append(fighters)
+        for matches in matchUps:
+            Encounter(matches)
+        for p in participantList:
+            if p.get_health()==0:
+                print(f'{p.get_name()} has died')
+                participantList.remove(p)
+    anim.done()  
+    print(f'{participantList[0].get_name()} has won the Hunger Games!')
+    return f'{participantList[0].get_name()} has won the Hunger Games!'
+
+if __name__=='__main__':
+    FullGame()

@@ -6,9 +6,10 @@
       There are {{danger}} danger zones, {{weapon}} weapons, and {{heal}}
       healing zones.
     </p>
-    <p>Input player stats:</p>
-
     <form method="POST">
+      <p>How many players are there?</p>
+      <input name="player_count" value="{{num_players}}" />
+      <p>Input player stats:</p>
       {% for i in range(1, num_players+1)%}
       <p>Player {{i}}</p>
       {% for stat in ['name', 'height', 'strength', 'speed', 'intelligence',
@@ -22,6 +23,7 @@
         TODO: add check for stat compatability and figure out how to call and
         render game
       </p>
+      <input type="submit" />
     </form>
   </body>
 </html>
