@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <p>You chose a game area with dimensions {{width}}x{{height}}</p>
+    <p>
+      There are {{danger}} danger zones, {{weapon}} weapons, and {{heal}}
+      healing zones.
+    </p>
+    <form method="POST">
+      <p>How many players are there?</p>
+      <input name="player_count" value="{{num_players}}" />
+      <p>Input player stats:</p>
+      {% for i in range(1, num_players+1)%}
+      <p>Player {{i}}</p>
+      {% for stat in ['name', 'height', 'strength', 'speed', 'intelligence',
+      'creativity'] %}
+      <input name="{{i}}-{{stat}}" placeholder="{{stat}}" />
+      {% endfor %}
+
+      <br />
+      {% endfor %}
+      <p>
+        TODO: add check for stat compatability and figure out how to call and
+        render game
+      </p>
+      <input type="submit" />
+    </form>
+  </body>
+</html>
